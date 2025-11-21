@@ -146,11 +146,13 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         position="fixed"
         elevation={scrolled ? 4 : 0}
         sx={{
-          backgroundColor: scrolled ? 'rgba(255, 255, 255, 0.95)' : 'background.paper',
-          backdropFilter: scrolled ? 'blur(10px)' : 'none',
+          backgroundColor: 'rgba(255, 255, 255, 0.96)',
+          color: 'text.primary',
+          backdropFilter: 'blur(10px)',
           transition: 'all 0.3s ease',
-          '& .MuiTypography-root': { color: scrolled ? 'text.primary' : 'inherit' },
-          '& .MuiButton-root': { color: scrolled ? 'text.primary' : 'inherit' },
+          borderBottom: '1px solid rgba(0,0,0,0.05)',
+          '& .MuiTypography-root': { color: 'text.primary' },
+          '& .MuiButton-root': { color: 'text.primary' },
         }}
       >
         <Toolbar>
@@ -160,7 +162,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               color="inherit"
               aria-label="menu"
               onClick={() => setDrawerOpen(true)}
-              sx={{ color: scrolled ? 'text.primary' : 'inherit' }}
+              sx={{ color: 'text.primary' }}
             >
               <Menu />
             </IconButton>
@@ -185,7 +187,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               <Typography
                 variant="h6"
                 sx={{ marginLeft: 1 }}
-                color={scrolled ? 'primary' : 'inherit'}
+                color="text.primary"
                 fontWeight="bold"
               >
                 Grain Auction

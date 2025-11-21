@@ -1,16 +1,13 @@
 import React, { useState } from 'react'
 import { Box, Container, Typography, TextField, Button, Paper, Avatar, Link, Grid, Alert, CircularProgress, useMediaQuery, useTheme } from '@mui/material'
-import { useNavigate } from 'react-router-dom'
+import { Link as RouterLink, useNavigate } from 'react-router-dom'
+import { useAuth } from '@/contexts/AuthContext'
 
 const LoginPage: React.FC = () => {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   const navigate = useNavigate()
-  // 模拟登录函数，因为AuthContext已移除
-  const login = async (credentials: {username: string, password: string}) => {
-    // 模拟登录成功
-    return Promise.resolve()
-  }
+  const { login } = useAuth()
   const [formData, setFormData] = useState({
     username: '',
     password: ''
@@ -41,9 +38,9 @@ const LoginPage: React.FC = () => {
     }
 
     if (!formData.password) {
-      newErrors.password = '请输入密码'
+      newErrors.password = 'Please enter password'
     } else if (formData.password.length < 6) {
-      newErrors.password = '密码长度不能少于6位'
+      newErrors.password = 'Password must be at least 6 characters'
     }
 
     setErrors(newErrors)
@@ -63,10 +60,10 @@ const LoginPage: React.FC = () => {
         username: formData.username,
         password: formData.password
       })
-      // 登录成功后根据用户角色跳转到对应页面
+      // Login success -> redirect based on role
       navigate('/')
     } catch (error) {
-      setErrorMessage('登录失败，请检查用户名和密码是否正确')
+      setErrorMessage('Login failed, please check your username and password')
       console.error('Login error:', error)
     } finally {
       setLoading(false)
@@ -205,12 +202,12 @@ const LoginPage: React.FC = () => {
                   忘记密码？
                 </Link>
               </Grid>
-              <Grid item
-                >
-                <Link 
+              <Grid item>
+                <Link
+                  component={RouterLink}
                   to="/register"
                   variant="body2"
-                  component="a"
+                  underline="hover"
                 >
                   还没有账号？立即注册
                 </Link>

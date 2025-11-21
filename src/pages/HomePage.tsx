@@ -6,7 +6,7 @@ const HomePage: React.FC = () => {
   const navigate = useNavigate()
 
   const handleQuickStart = () => {
-    navigate('/auction')
+    navigate('/auctions')
   }
 
   return (
