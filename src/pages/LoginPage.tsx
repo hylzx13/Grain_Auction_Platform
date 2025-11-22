@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
-import { Box, Container, Typography, TextField, Button, Paper, Avatar, Link, Grid, Alert, CircularProgress, useMediaQuery, useTheme } from '@mui/material'
+import React, { useState, useEffect } from 'react'
+import { Box, Container, Typography, TextField, Button, Paper, Avatar, Link, Grid, Alert, CircularProgress, useMediaQuery, useTheme, Checkbox, FormControlLabel } from '@mui/material'
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
+import TermsPrivacyModal from '@/components/TermsPrivacyModal'
 
 const LoginPage: React.FC = () => {
   const theme = useTheme()
@@ -15,6 +16,10 @@ const LoginPage: React.FC = () => {
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [termsAccepted, setTermsAccepted] = useState(false)
+  const [termsPrivacyModalOpen, setTermsPrivacyModalOpen] = useState(false)
+  const [isFirstTime, setIsFirstTime] = useState(true)
+  const [termsRead, setTermsRead] = useState(false)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -43,6 +48,10 @@ const LoginPage: React.FC = () => {
       newErrors.password = 'Password must be at least 6 characters'
     }
 
+    if (!termsAccepted) {
+      newErrors.terms = '请阅读并同意服务条款和隐私政策'
+    }
+
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -51,7 +60,18 @@ const LoginPage: React.FC = () => {
     e.preventDefault()
 
     if (!validateForm()) {
+      // 如果未勾选服务条款，自动打开服务条款和隐私政策模态框
+      if (!termsAccepted && isFirstTime) {
+        setTermsPrivacyModalOpen(true)
+      }
       return
+    }
+
+    // 记住用户已接受条款
+    if (isFirstTime) {
+      setIsFirstTime(false)
+      // 可以考虑使用localStorage存储状态
+      // localStorage.setItem('termsAccepted', 'true')
     }
 
     setLoading(true)
@@ -68,6 +88,24 @@ const LoginPage: React.FC = () => {
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleTermsCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = event.target.checked
+    
+    if (checked && isFirstTime && !termsRead) {
+      // 第一次勾选时，强制弹出服务条款和隐私政策模态框
+      setTermsPrivacyModalOpen(true)
+    } else {
+      // 用户已阅读条款后可以直接勾选/取消勾选
+      setTermsAccepted(checked)
+    }
+  }
+
+  const handleTermsReadingComplete = () => {
+    setTermsRead(true)
+    // 移除自动设置termsAccepted为true的逻辑，让用户自行点击复选框
+    setTermsPrivacyModalOpen(false)
   }
 
   return (
@@ -198,7 +236,13 @@ const LoginPage: React.FC = () => {
               >
               <Grid item xs
                 >
-                <Link href="#" variant="body2">
+                <Link
+                  component={RouterLink}
+                  to="/forgot-password"
+                  variant="body2"
+                  underline="hover"
+                  sx={{ color: theme.palette.primary.main }}
+                >
                   忘记密码？
                 </Link>
               </Grid>
@@ -215,22 +259,49 @@ const LoginPage: React.FC = () => {
             </Grid>
           </form>
 
-          <Box sx={{ mt: 4, textAlign: 'center' }}
-          >
-            <Typography variant="body2" color="text.secondary"
-            >
-              登录即表示您同意我们的
-              <Link href="#" variant="body2"
-                >
-                服务条款
-              </Link>
-              和
-              <Link href="#" variant="body2"
-                >
-                隐私政策
-              </Link>
-            </Typography>
+          <Box sx={{ mt: 3 }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={termsAccepted}
+                  onChange={handleTermsCheckboxChange}
+                  color="primary"
+                />
+              }
+              label={
+                <Typography variant="body2" color="text.secondary">
+                  我已阅读并同意
+                  <Link href="#" variant="body2" onClick={(e) => {
+                    e.preventDefault();
+                    setTermsPrivacyModalOpen(true);
+                  }}>
+                    服务条款
+                  </Link>
+                  和
+                  <Link href="#" variant="body2" onClick={(e) => {
+                    e.preventDefault();
+                    setTermsPrivacyModalOpen(true);
+                  }}>
+                    隐私政策
+                  </Link>
+                </Typography>
+              }
+
+            />
+            {errors.terms && (
+              <Typography variant="caption" color="error" sx={{ display: 'block', mt: -1 }}>
+                {errors.terms}
+              </Typography>
+            )}
           </Box>
+          
+          {/* 服务条款与隐私政策模态框 */}
+          <TermsPrivacyModal
+            open={termsPrivacyModalOpen}
+            onClose={() => setTermsPrivacyModalOpen(false)}
+            requireReadingTime={isFirstTime && !termsRead}
+            onReadingComplete={handleTermsReadingComplete}
+          />
         </Paper>
       </Container>
     </Box>

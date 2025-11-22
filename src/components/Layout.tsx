@@ -48,7 +48,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     { text: 'Create Auction', icon: <PieChart size={18} />, path: '/auction/create', roles: ['farmer', 'admin'] },
     { text: 'Dealer Center', icon: <ShoppingCart size={18} />, path: '/dealer-center', roles: ['dealer'] },
     { text: 'User Management', icon: <Users size={18} />, path: '/admin/users', roles: ['admin'] },
-    { text: 'Profile', icon: <User size={18} />, path: '/profile', roles: ['all'] },
     { text: 'Analytics', icon: <BarChart3 size={18} />, path: '/analytics', roles: ['all'] },
     { text: 'Content', icon: <FileText size={18} />, path: '/content-display', roles: ['all'] },
   ]
@@ -276,7 +275,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <Box sx={{ bgcolor: 'background.paper', py: 3, mt: 'auto', boxShadow: '0 -2px 10px rgba(0, 0, 0, 0.05)' }}>
         <Container maxWidth="lg">
           <Typography variant="body2" color="text.secondary" align="center">
-            Copyright 2024 Grain Auction Platform
+            Copyright 2025 Grain Auction Platform
           </Typography>
         </Container>
       </Box>

@@ -1,5 +1,6 @@
 import React from 'react'
 import { Container, Typography, Box, Grid, Paper } from '@mui/material'
+import { Link } from 'react-router-dom'
 
 const ContentDisplayPage: React.FC = () => {
   const projects = [
@@ -28,34 +29,56 @@ const ContentDisplayPage: React.FC = () => {
         </Typography>
         
         <Grid container spacing={4}>
-          {projects.map((project, index) => (
-            <Grid item xs={12} md={4} key={index}>
-              <Paper 
-                elevation={3} 
-                sx={{ 
-                  p: 4, 
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  transition: 'transform 0.2s, box-shadow 0.2s',
-                  '&:hover': {
-                    transform: 'translateY(-5px)',
-                    boxShadow: 5
-                  }
-                }}
-              >
-                <Typography variant="h6" component="h2" gutterBottom sx={{ color: '#4CAF50' }}>
-                  {project.title}
-                </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                  {project.category}
-                </Typography>
-                <Typography variant="body1" sx={{ flexGrow: 1 }}>
-                  {project.description}
-                </Typography>
-              </Paper>
-            </Grid>
-          ))}
+          {projects.map((project, index) => {
+            // 根据项目索引确定导航路径
+            const getPath = () => {
+              switch(index) {
+                case 0: return '/content/concept'; // 概念介绍页面
+                case 1: return '/content/model';   // 模型讲解页面
+                case 2: return '/content/implementation'; // 实现方式页面
+                default: return '/content';
+              }
+            };
+            
+            return (
+              <Grid item xs={12} md={4} key={index}>
+                <Link 
+                  to={getPath()} 
+                  style={{ textDecoration: 'none' }}
+                >
+                  <Paper 
+                    elevation={3} 
+                    sx={{ 
+                      p: 4, 
+                      height: '100%',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      transition: 'transform 0.2s, box-shadow 0.2s, cursor 0.2s',
+                      '&:hover': {
+                        transform: 'translateY(-5px)',
+                        boxShadow: 5,
+                        cursor: 'pointer'
+                      }
+                    }}
+                  >
+                    <Typography variant="h6" component="h2" gutterBottom sx={{ color: '#4CAF50' }}>
+                      {project.title}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                      {project.category}
+                    </Typography>
+                    <Typography variant="body1" sx={{ flexGrow: 1 }}>
+                      {project.description}
+                    </Typography>
+                    <Typography variant="body2" sx={{ mt: 2, color: '#4CAF50', display: 'flex', alignItems: 'center' }}>
+                      了解更多 
+                      <Box sx={{ ml: 1, width: 0, height: 0, borderTop: '4px solid transparent', borderBottom: '4px solid transparent', borderLeft: '6px solid #4CAF50' }} />
+                    </Typography>
+                  </Paper>
+                </Link>
+              </Grid>
+            );
+          })}
         </Grid>
         
         <Box sx={{ mt: 10, textAlign: 'center' }}>

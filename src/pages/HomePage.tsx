@@ -31,7 +31,15 @@ const HomePage: React.FC = () => {
                 sx={{
                   fontWeight: 700,
                   letterSpacing: '-0.025em',
-                  textShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                  textShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                  whiteSpace: 'normal',
+                  wordBreak: 'keep-all',
+                  [theme => theme.breakpoints.down('sm')]: {
+                    fontSize: '2rem'
+                  },
+                  [theme => theme.breakpoints.down('xs')]: {
+                    fontSize: '1.75rem'
+                  }
                 }}
               >
                 专业级粮食拍卖平台
@@ -70,6 +78,14 @@ const HomePage: React.FC = () => {
                 <Typography variant="body1" sx={{ mb: 4 }}>
                   点击下方按钮开始浏览拍卖项目
                 </Typography>
+                <Button 
+                  variant="contained" 
+                  size="large"
+                  onClick={handleQuickStart}
+                  sx={{ bgcolor: '#FF9800', color: 'white', '&:hover': { bgcolor: '#F57C00' } }}
+                >
+                  浏览拍卖项目
+                </Button>
               </Box>
             </Grid>
           </Grid>
@@ -134,7 +150,7 @@ const HomePage: React.FC = () => {
           <Typography variant="h3" component="h2" align="center" gutterBottom sx={{ mb: 6 }}>
             准备好开始您的粮食交易了吗？
           </Typography>
-          <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4, flexWrap: 'wrap' }}>
             <Button 
               variant="contained" 
               size="large"
